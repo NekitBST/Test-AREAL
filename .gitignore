@@ -1,0 +1,21 @@
+# Node.js
+/server/node_modules
+
+# .env file containing sensitive data
+/.env
+
+# Build files and logs
+/build/
+/dist/
+/*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# npm package lock file (optional, if you want to ignore it)
+/package-lock.json
