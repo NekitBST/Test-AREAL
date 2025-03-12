@@ -5,11 +5,11 @@ const pool = require('./dbConnect');
 router.get('/employees', async (req, res) => {
     try {
         const result = await pool.query(
-            'SELECT * FROM employees WHERE fired = false ORDER BY id ASC'
+            'SELECT * FROM employees ORDER BY id ASC'
         );
         res.json(result.rows);
     } catch (err) {
-        console.error('Ошибка при получении полного списка сотрудников (не уволенных):', err);
+        console.error('Ошибка при получении полного списка сотрудников:', err);
         res.sendStatus(500);
     }
 });
@@ -27,5 +27,20 @@ router.post('/employees', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+router.get('/employees/search', async (req, res) => {
+    const { full_name } = req.query;
+    try {
+        const result = await pool.query(
+            'SELECT * FROM employees WHERE full_name ILIKE $1',
+            [`%${full_name}%`]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Ошибка при поиске сотрудника:', err);
+        res.sendStatus(500);
+    }
+});
+
 
 module.exports = router;
