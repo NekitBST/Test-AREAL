@@ -2,7 +2,7 @@
 /server/node_modules
 
 # .env file containing sensitive data
-/.env
+/server/.env
 
 # Build files and logs
 /build/
