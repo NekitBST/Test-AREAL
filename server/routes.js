@@ -42,7 +42,7 @@ router.get('/employees/search', async (req, res) => {
     }
 });
 
-router.patch('/employees/:id/fired', async (req, res) => {
+router.patch('/employees/fired/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query(
@@ -50,7 +50,7 @@ router.patch('/employees/:id/fired', async (req, res) => {
             [id]
         );
         if (result.rows.length === 0) {
-            return res.sendStatus(404);
+            return res.status(404).json({ error: 'Сотрудник не найден или уже уволен' });;
         }
         res.json(result.rows[0]);
     } catch (err) {
@@ -81,6 +81,33 @@ router.get('/employees/filter', async (req, res) => {
     }
 });
 
+router.put('/employees/:id', async (req, res) => {
+    const { id } = req.params;
+    const { full_name, birth_date, passport, contact, address, department, position, salary } = req.body;
+    try {
+        const check = await pool.query(
+            'SELECT fired FROM employees WHERE id = $1',
+            [id]
+        );
 
+        if (check.rows[0].fired) {
+            return res.status(400).json({ error: 'Данный сотрудник уволен, обновление данных невозможно' });
+        }
+
+        if (check.rows.length === 0) {
+            return res.status(404).json({ error: 'Сотрудник не найден' });
+        }
+
+        const result = await pool.query(
+            `UPDATE employees SET full_name = $1, birth_date = $2, passport = $3, contact = $4, address = $5, department = $6, position = $7, salary = $8 WHERE id = $9 AND fired = false RETURNING *`,
+            [full_name, birth_date, passport, contact, address, department, position, salary, id]
+        );
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Ошибка при обновлении данных сотрудника:', err);
+        res.sendStatus(500);
+    }
+});
 
 module.exports = router;
