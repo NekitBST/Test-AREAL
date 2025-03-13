@@ -59,4 +59,28 @@ router.patch('/employees/:id/fired', async (req, res) => {
     }
 });
 
+router.get('/employees/filter', async (req, res) => {
+    const { department, position } = req.query
+    try {
+        let query = 'SELECT * FROM employees WHERE fired = false'
+        const params= [];
+        if (department){
+            params.push(department);
+            query += ` AND department = $${params.length}`;
+        }
+        if (position){
+            params.push(position);
+            query += ` AND position = $${params.length}`;
+        }
+
+        const result = await pool.query (query, params);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Ошибка при фильтрации сотрудников:', err);
+        res.sendStatus(500);
+    }
+});
+
+
+
 module.exports = router;
