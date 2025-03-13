@@ -42,5 +42,21 @@ router.get('/employees/search', async (req, res) => {
     }
 });
 
+router.patch('/employees/:id/fired', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            'UPDATE employees SET fired = true WHERE id = $1 AND fired = false RETURNING *',
+            [id]
+        );
+        if (result.rows.length === 0) {
+            return res.sendStatus(404);
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Ошибка при увольнении сотрудника:', err);
+        res.sendStatus(500);
+    }
+});
 
 module.exports = router;
