@@ -59,3 +59,30 @@ th {
     outline: none;
     border-color: #5274e3;
 }
+
+.search-panel {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.search-panel input,
+.search-panel select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-panel input {
+    width: 350px;
+}
+
+.search-panel select {
+    width: 200px;
+}
+
+.search-panel input:focus,
+.search-panel select:focus {
+    outline: none;
+    border-color: #5274e3;
+}

@@ -56,7 +56,53 @@ async function handleSearch() {
     }
 }
 
+async function initializeFilters() {
+    try {
+        const response = await fetch(`${API_URL}/employees`);
+        const employees = await response.json();
+        
+        const departments = [...new Set(employees.map(emp => emp.department))];
+        const positions = [...new Set(employees.map(emp => emp.position))];
+
+        const departmentFilter = document.getElementById('departmentFilter');
+        const positionFilter = document.getElementById('positionFilter');
+
+        departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept;
+            option.textContent = dept;
+            departmentFilter.appendChild(option);
+        });
+
+        positions.forEach(pos => {
+            const option = document.createElement('option');
+            option.value = pos;
+            option.textContent = pos;
+            positionFilter.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Ошибка при инициализации фильтров:', error);
+    }
+}
+
+async function handleFilters() {
+    const department = document.getElementById('departmentFilter').value;
+    const position = document.getElementById('positionFilter').value;
+
+    try {
+        const response = await fetch(`${API_URL}/employees/filter?department=${department}&position=${position}`);
+        const employees = await response.json();
+        displayEmployees(employees);
+    } catch (error) {
+        console.error('Ошибка при фильтрации:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchEmployees();
+    initializeFilters();
+    
     document.getElementById('searchName').addEventListener('input', handleSearch);
+    document.getElementById('departmentFilter').addEventListener('change', handleFilters);
+    document.getElementById('positionFilter').addEventListener('change', handleFilters);
 });
