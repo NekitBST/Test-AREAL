@@ -86,3 +86,17 @@ th {
     outline: none;
     border-color: #5274e3;
 }
+
+.btn-primary {
+    background-color: #5274e3;
+    color: white;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.6s;
+}
+
+.btn-primary:hover {
+    background-color: #3f5bb8;
+}

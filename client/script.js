@@ -32,7 +32,7 @@ function displayEmployees(employees) {
             <td>
             ${!employee.fired ? `
                 <button onclick="editEmployee(${employee.id})" class="btn-primary">Редактировать</button>
-                <button onclick="fireEmployee(${employee.id})" class="btn-primary">Уволить</button>
+                <button onclick="firedEmployee(${employee.id})" class="btn-primary">Уволить</button>
             ` : ''}
             </td>
         `;
@@ -95,6 +95,26 @@ async function handleFilters() {
         displayEmployees(employees);
     } catch (error) {
         console.error('Ошибка при фильтрации:', error);
+    }
+}
+
+async function firedEmployee(id) {
+    if (!confirm('Уволить сотрудника?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/employees/fired/${id}`, {
+            method: 'PATCH'
+        });
+
+        if (!response.ok) {
+            throw new Error;
+        }
+        fetchEmployees();
+    } catch (error) {
+        console.error('Ошибка при увольнении:', error);
+        alert('Не удалось уволить сотрудника');
     }
 }
 
