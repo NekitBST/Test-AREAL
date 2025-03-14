@@ -16,6 +16,8 @@ function displayEmployees(employees) {
 
     employees.forEach(employee => {
         const row = document.createElement('tr');
+        if (employee.fired) row.classList.add('fired');
+        
         row.innerHTML = `
             <td>${employee.full_name}</td>
             <td>${new Date(employee.birth_date).toLocaleDateString()}</td>
@@ -26,6 +28,13 @@ function displayEmployees(employees) {
             <td>${employee.position}</td>
             <td>${employee.salary}</td>
             <td>${new Date(employee.hire_date).toLocaleDateString()}</td>
+            <td>${employee.fired ? 'Уволен' : 'Работает'}</td>
+            <td>
+            ${!employee.fired ? `
+                <button onclick="editEmployee(${employee.id})" class="btn-primary">Редактировать</button>
+                <button onclick="fireEmployee(${employee.id})" class="btn-primary">Уволить</button>
+            ` : ''}
+            </td>
         `;
         tableBody.appendChild(row);
     });
