@@ -40,6 +40,23 @@ function displayEmployees(employees) {
     });
 }
 
+async function handleSearch() {
+    const searchTerm = document.getElementById('searchName').value.trim();
+    if (!searchTerm) {
+        fetchEmployees();
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/employees/search?full_name=${searchTerm}`);
+        const employees = await response.json();
+        displayEmployees(employees);
+    } catch (error) {
+        console.error('Ошибка при поиске:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchEmployees();
+    document.getElementById('searchName').addEventListener('input', handleSearch);
 });

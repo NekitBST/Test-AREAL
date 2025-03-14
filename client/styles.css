@@ -36,6 +36,26 @@ th, td {
     border-bottom: 1px solid #ddd;
 }
 
+th {
+    background-color: #dddddd;
+}
+
 .fired {
     background-color: #ffebee;
+}
+
+.search-panel {
+    margin-bottom: 20px;
+}
+
+.search-panel input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 350px;
+}
+
+.search-panel input:focus {
+    outline: none;
+    border-color: #5274e3;
 }
