@@ -118,6 +118,50 @@ async function firedEmployee(id) {
     }
 }
 
+function openModal() {
+    document.getElementById('employeeModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('employeeModal').style.display = 'none';
+    document.getElementById('employeeForm').reset();
+}
+
+async function createEmployee(event) {
+    event.preventDefault();
+
+    const formData = {
+        full_name: document.getElementById('fullName').value,
+        birth_date: document.getElementById('birthDate').value,
+        passport: document.getElementById('passport').value,
+        contact: document.getElementById('contact').value,
+        address: document.getElementById('address').value,
+        department: document.getElementById('department').value,
+        position: document.getElementById('position').value,
+        salary: document.getElementById('salary').value,
+        hire_date: document.getElementById('hireDate').value
+    };
+
+    try {
+        const response = await fetch(`${API_URL}/employees`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            throw new Error;
+        }
+        closeModal();
+        fetchEmployees();
+    } catch (error) {
+        console.error('Ошибка при создании:', error);
+        alert('Не удалось создать сотрудника');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchEmployees();
     initializeFilters();
@@ -125,4 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('searchName').addEventListener('input', handleSearch);
     document.getElementById('departmentFilter').addEventListener('change', handleFilters);
     document.getElementById('positionFilter').addEventListener('change', handleFilters);
+
+    document.getElementById('addEmployeeBtn').addEventListener('click', openModal);
+    document.querySelector('.close').addEventListener('click', closeModal);
+    document.getElementById('employeeForm').addEventListener('submit', createEmployee);
 });
