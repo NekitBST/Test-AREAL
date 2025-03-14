@@ -1,0 +1,18 @@
+body {
+    font-family: Arial;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 95%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
