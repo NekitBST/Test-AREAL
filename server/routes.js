@@ -110,4 +110,18 @@ router.put('/employees/:id', async (req, res) => {
     }
 });
 
+router.get('/employees/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query('SELECT * FROM employees WHERE id = $1', [id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Сотрудник не найден' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Ошибка при получении данных сотрудника:', err);
+        res.sendStatus(500);
+    }
+});
+
 module.exports = router;
