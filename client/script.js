@@ -156,10 +156,50 @@ async function createEmployee(event) {
         }
         closeModal();
         fetchEmployees();
+        alert('Сотрудник добавлен');
     } catch (error) {
         console.error('Ошибка при создании:', error);
         alert('Не удалось создать сотрудника');
     }
+}
+
+function formatPassport(input) {
+    let value = input.value.replace(/\s/g, '');
+    
+    if (value.length > 10) {
+        value = value.slice(0, 10);
+    }
+    
+    if (value.length > 4) {
+        value = value.slice(0, 4) + ' ' + value.slice(4);
+    }
+    
+    input.value = value;
+}
+
+function formatPhone(input) {
+    let value = input.value.replace(/\D/g, '');
+
+    if (value.length > 11) {
+        value = value.slice(0, 11);
+    }
+
+    let formattedValue = '+7 ';
+    
+    if (value.length > 1) {
+        formattedValue += '(' + value.slice(1, 4);
+    }
+    if (value.length > 4) {
+        formattedValue += ') ' + value.slice(4, 7);
+    }
+    if (value.length > 7) {
+        formattedValue += '-' + value.slice(7, 9);
+    }
+    if (value.length > 9) {
+        formattedValue += '-' + value.slice(9, 11);
+    }
+
+    input.value = formattedValue;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -173,4 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addEmployeeBtn').addEventListener('click', openModal);
     document.querySelector('.close').addEventListener('click', closeModal);
     document.getElementById('employeeForm').addEventListener('submit', createEmployee);
+
+    const passportInput = document.getElementById('passport');
+    const contactInput = document.getElementById('contact');
+
+    passportInput.addEventListener('input', () => formatPassport(passportInput));
+    contactInput.addEventListener('input', () => formatPhone(contactInput));
 });
