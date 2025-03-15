@@ -241,6 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('searchName').addEventListener('input', handleSearch);
     document.getElementById('departmentFilter').addEventListener('change', handleFilters);
     document.getElementById('positionFilter').addEventListener('change', handleFilters);
+    
+    document.getElementById('applyFiltersBtn').addEventListener('click', handleFilters);
 
     document.getElementById('addEmployeeBtn').addEventListener('click', openModal);
     document.querySelector('.close').addEventListener('click', closeModal);

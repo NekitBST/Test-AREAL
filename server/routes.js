@@ -60,20 +60,20 @@ router.patch('/employees/fired/:id', async (req, res) => {
 });
 
 router.get('/employees/filter', async (req, res) => {
-    const { department, position } = req.query
+    const { department, position } = req.query;
     try {
-        let query = 'SELECT * FROM employees WHERE fired = false'
-        const params= [];
-        if (department){
+        let query = 'SELECT * FROM employees';
+        const params = [];
+        if (department) {
             params.push(department);
-            query += ` AND department = $${params.length}`;
+            query += ` WHERE department = $${params.length}`;
         }
-        if (position){
+        if (position) {
             params.push(position);
             query += ` AND position = $${params.length}`;
         }
 
-        const result = await pool.query (query, params);
+        const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (err) {
         console.error('Ошибка при фильтрации сотрудников:', err);
