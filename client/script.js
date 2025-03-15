@@ -125,11 +125,14 @@ function openModal() {
 function closeModal() {
     document.getElementById('employeeModal').style.display = 'none';
     document.getElementById('employeeForm').reset();
+    document.getElementById('employeeForm').dataset.employeeId = '';
+    document.getElementById('hireDate').disabled = false;
 }
 
-async function createEmployee(event) {
+async function saveEmployee(event) {
     event.preventDefault();
-
+    const id = event.target.dataset.employeeId;
+    
     const formData = {
         full_name: document.getElementById('fullName').value,
         birth_date: document.getElementById('birthDate').value,
@@ -143,8 +146,11 @@ async function createEmployee(event) {
     };
 
     try {
-        const response = await fetch(`${API_URL}/employees`, {
-            method: 'POST',
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/employees/${id}` : `${API_URL}/employees`;
+        
+        const response = await fetch(url, {
+            method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -152,14 +158,16 @@ async function createEmployee(event) {
         });
 
         if (!response.ok) {
-            throw new Error;
+            const error = await response.json();
+            throw new Error(error.error || 'Произошла ошибка');
         }
+
         closeModal();
         fetchEmployees();
-        alert('Сотрудник добавлен');
+        alert(id ? 'Данные сотрудника обновлены' : 'Сотрудник добавлен');
     } catch (error) {
-        console.error('Ошибка при создании:', error);
-        alert('Не удалось создать сотрудника');
+        console.error('Ошибка при сохранении:', error);
+        alert(error.message || 'Не удалось сохранить данные сотрудника');
     }
 }
 
@@ -202,6 +210,30 @@ function formatPhone(input) {
     input.value = formattedValue;
 }
 
+async function editEmployee(id) {
+    try {
+        const response = await fetch(`${API_URL}/employees/${id}`);
+        const employee = await response.json();
+        
+        document.getElementById('employeeForm').dataset.employeeId = id;
+        document.getElementById('fullName').value = employee.full_name;
+        document.getElementById('birthDate').value = employee.birth_date.split('T')[0];
+        document.getElementById('passport').value = employee.passport;
+        document.getElementById('contact').value = employee.contact;
+        document.getElementById('address').value = employee.address;
+        document.getElementById('department').value = employee.department;
+        document.getElementById('position').value = employee.position;
+        document.getElementById('salary').value = employee.salary;
+        document.getElementById('hireDate').value = employee.hire_date.split('T')[0];
+        document.getElementById('hireDate').disabled = true;
+        
+        openModal();
+    } catch (error) {
+        console.error('Ошибка при получении данных сотрудника:', error);
+        alert('Не удалось загрузить данные сотрудника');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchEmployees();
     initializeFilters();
@@ -212,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('addEmployeeBtn').addEventListener('click', openModal);
     document.querySelector('.close').addEventListener('click', closeModal);
-    document.getElementById('employeeForm').addEventListener('submit', createEmployee);
+    document.getElementById('employeeForm').addEventListener('submit', saveEmployee);
 
     const passportInput = document.getElementById('passport');
     const contactInput = document.getElementById('contact');
